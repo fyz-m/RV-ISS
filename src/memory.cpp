@@ -1,16 +1,17 @@
 #include "headers/memory.hpp"
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <ostream>
 
-// TODO: add error checking for out of bounds index
+// std::bitset to limit the address to 5-bits can limit the index so it is never out of bounds
+// Could increase perfomance as it makes validate_address() redundant  
 
   RegisterFile::RegisterFile(int width)
-      : WIDTH(width)
-      {
-        registers[0] = 0;
-      }
+      : registers{0},  // in RISC-V, register x0 is hardwired to 0
+        WIDTH(width)
+        {}
 
   void RegisterFile::Write(int address, uint32_t data) 
   {
@@ -31,17 +32,18 @@
   void RegisterFile::validate_address(int& address) const
   {
     if ( !(0 <= address && address < REGISTER_FILE_SIZE) )
-      throw std::out_of_range("Invalid register");
+      throw std::out_of_range("Invalid register index");
   }
 
 
 
-// TODO:
-// out of bounds checking
   Memory::Memory(int size)     
   {
-    m_memory.reserve(size);
-    m_memory.resize(1);
+    // Pre-allocate memory of amount 'size' to the array
+    // reserve() changes the capacity of array but not size
+    // So if resize() is called (in Write() member method),
+    // the array will not have to be re-allocated (very expensive) as long as capacity <= size
+    m_memory.reserve(size); 
   }
 
   void Memory::Write(uint8_t data, std::size_t address) 
@@ -49,9 +51,12 @@
     // Write a byte at address
 
     // If address is greater than current length, resize vector
-    if (address >= std::size(m_memory)) {
-      m_memory.resize(address + 1);
-    }
+    // TODO: 
+    // For Write() calls to 32/16-bit data, we can resize the vector once in the beginning
+    // instead of for every byte - would increase performance but resizing the vector should be infrequent anyway
+    if (address >= std::size(m_memory)) 
+        m_memory.resize(address + 1);
+    
     m_memory[address] = data;
   }
 
@@ -100,17 +105,28 @@
 
   bool Memory::Load(const char *filepath) 
   {
-    // Load contents of a file into the memory
-    std::ifstream input_file{filepath, std::ios::binary};
+    // Load contents of a binary file into the memory
+    std::ifstream input_file{filepath, std::ios::binary | std::ios::in};
 
-    if (!input_file) {
-      std::cerr << "Could not open file";
+    if (!input_file) 
+    {
+      std::cout << "Could not open file" << std::endl;
       return false;
     }
 
-    uint32_t inst;
-    while (input_file.read(reinterpret_cast<char *>(&inst), sizeof(inst))) {
-      m_memory.push_back(inst);
+    uint32_t inst {};
+    uint8_t byte[4];
+    while (input_file.read(reinterpret_cast<char*>(&inst), sizeof(uint32_t))) 
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        byte[i] = static_cast<uint8_t>(inst >> (8 * i)); 
+      }
+
+      for (int i = 3; i >= 0; i--) 
+      {
+        m_memory.push_back(byte[i]);
+      }
     }
 
     input_file.close();
