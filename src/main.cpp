@@ -1,19 +1,28 @@
 #include "headers/cpu.hpp"
 #include "headers/memory.hpp"
-#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <ostream>
 
 
+constexpr int WIDTH = 32;
 
-int main() {
+int main(int argc, char* argv[]) {
 
-  std::shared_ptr <Memory> I = std::make_shared <Memory>();
-  std::shared_ptr <Memory> D = std::make_shared <Memory>();
+  if (argc != 2) {
+    std::cerr << "\tUsage: ./rv_iss binaryfile.bin" << std::endl;
+    return 1;
+  }
+  auto program = argv[1];
 
- 
-  CPU cpu (32, I, D);
+  auto Instruction_Memory = std::make_shared <Memory>();
+  auto Data_Memory = std::make_shared <Memory>();
+
+  if (!Instruction_Memory->Load(program))
+      return 1;
+  
+
+  CPU cpu (WIDTH, Instruction_Memory, Data_Memory);
   
 } 
 
