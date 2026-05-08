@@ -83,7 +83,48 @@ INSTANTIATE_TEST_SUITE_P(R_TYPE, Rtype_Execute_Test,
       Rtype_Execute_Case{OPERATION::SLTU, -1, 0, 0, "set_less_than_u_negative_values"},
       Rtype_Execute_Case{OPERATION::SLTU, 0, -1, 1, "set_less_than_u_negative_values_2"},
       Rtype_Execute_Case{OPERATION::SLTU, 0x7FFFFFFF, static_cast<int32_t>(0x80000000), 1, "set_less_than_u_compares_as_unsigned"},
-      Rtype_Execute_Case{OPERATION::SLTU, static_cast<int32_t>(0x80000000), static_cast<int32_t>(0x80000001), 1, "set_less_than_u_compares_as_unsigned_2"}
+      Rtype_Execute_Case{OPERATION::SLTU, static_cast<int32_t>(0x80000000), static_cast<int32_t>(0x80000001), 1, "set_less_than_u_compares_as_unsigned_2"},
+
+      Rtype_Execute_Case{OPERATION::MUL, 4, 4, 16, "mul_basic"},
+      Rtype_Execute_Case{OPERATION::MUL, 4, -4, -16, "mul_negative"},
+      Rtype_Execute_Case{OPERATION::MUL, 0x7FFFFFFF, 50, static_cast<int32_t>(0xFFFFFFCE), "mul_stores_bottom_half_of_result"},
+      Rtype_Execute_Case{OPERATION::MUL, 0x7FFFFFFF, -50, 0x00000032, "mul_stores_bottom_half_of_result_negative"},
+
+      Rtype_Execute_Case{OPERATION::MULH, 0x7FFFFFFF, 50, 0x18, "mulh_stores_top_half_of_result"},
+      Rtype_Execute_Case{OPERATION::MULH, 0x7FFFFFFF, -50, static_cast<int32_t>(0xFFFFFFE7), "mulh_stores_top_half_of_result_negative"},
+      Rtype_Execute_Case{OPERATION::MULH, -1, -1, 1, "mulh_treats_operands_as_signed"},
+
+      Rtype_Execute_Case{OPERATION::MULHU, static_cast<int32_t>(0xFFFFFFFF), 50, 0x32, "mulhu_stores_top_half_of_result"},
+    
+      // rs1 = signed, rs2 = unsigned
+      Rtype_Execute_Case{OPERATION::MULHSU, 2, static_cast<int32_t>(0xFFFFFFFF), 0x2, "mulhu_treats_rs2_as_unsigned"},
+      Rtype_Execute_Case{OPERATION::MULHSU, -2, static_cast<int32_t>(0xFFFFFFFF), static_cast<int32_t>(0xFFFFFFFE), "mulhu_treats_rs1_as_signed"},
+      
+      Rtype_Execute_Case{OPERATION::DIV, 10, 5, 2, "div_basic"},
+      Rtype_Execute_Case{OPERATION::DIV, 10, -5, -2, "div_negative"},
+      Rtype_Execute_Case{OPERATION::DIV, -10, -5, 2, "div_both_negative"},
+      Rtype_Execute_Case{OPERATION::DIV, 10, 0, -1, "div_zero"},  // RISC-V division by 0 sets all bits to 1 
+      Rtype_Execute_Case{OPERATION::DIV, 0x10000000, -1, 0x10000000, "div_overflow"}, // Divison overflow sets rd = rs1   
+
+      Rtype_Execute_Case{OPERATION::DIVU, 10, 5, 2, "divu_basic"},
+      Rtype_Execute_Case{OPERATION::DIVU, -1, 2, 0x8000000, "divu_treats_operands_as_unsigned"},
+      Rtype_Execute_Case{OPERATION::DIVU, 10, 0, -1, "divu_zero"},  
+      
+      
+      Rtype_Execute_Case{OPERATION::REM, 12, 5, 2, "rem_basic"},
+      Rtype_Execute_Case{OPERATION::REM, -12, -5, -2, "rem_negative"},
+      // for negative operands, sign of remainder (rd) is equal to sign of rs1
+      Rtype_Execute_Case{OPERATION::REM, 12, -5, 2, "rem_takes_sign_of_rs1"},
+      Rtype_Execute_Case{OPERATION::REM, -15, 10, -5, "rem_takes_sign_of_rs1_2"},
+      // RISC-V defines remainder = rs1 if dividing by 0
+      Rtype_Execute_Case{OPERATION::REM, 10, 0, 10, "rem_divide_by_0"},
+    
+      
+
+
+      Rtype_Execute_Case{OPERATION::REMU, 12, 5, 2, "remu_basic"},
+      Rtype_Execute_Case{OPERATION::REMU, 10, 0, 10, "remu_divide_by_0"}
+
     ),
 
     [](const ::testing::TestParamInfo<Rtype_Execute_Case>& info) {
