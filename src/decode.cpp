@@ -84,7 +84,7 @@ void decode_R_type(DecodedInstruction& fields)
         case 0:
           fields.Operation = OPERATION::SLT; return;    
         case 1:
-          fields.Operation = OPERATION::MULSU; return;
+          fields.Operation = OPERATION::MULHSU; return;
       } break;
 
     case 3:
@@ -94,7 +94,7 @@ void decode_R_type(DecodedInstruction& fields)
         case 0:
           fields.Operation = OPERATION::SLTU; return;    
         case 1:
-          fields.Operation = OPERATION::MULU; return;
+          fields.Operation = OPERATION::MULHU; return;
       } break;
 
     case 4:
@@ -138,7 +138,7 @@ void decode_R_type(DecodedInstruction& fields)
         case 1:
           fields.Operation = OPERATION::REMU; return;
       } break;
-      
+
   }
   std::cerr << "Unable to find operation" << std::endl;
 }
