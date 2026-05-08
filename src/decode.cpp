@@ -9,6 +9,7 @@ void decode(DecodedInstruction &input_instruction)
   
   input_instruction.opcode = input_instruction.raw_inst & 0x0000007F;
   set_type(input_instruction);
+
   switch (input_instruction.type) {
 
   case TYPE::R_TYPE:
@@ -55,30 +56,91 @@ void decode_R_type(DecodedInstruction& fields)
   switch (fields.funct3) 
   {
     case 0:
-      fields.Operation = (fields.funct7 == 0) ? OPERATION::ADD : OPERATION::SUB;
-      break;
+
+      switch (fields.funct7) 
+      {
+        case 1:
+          fields.Operation = OPERATION::MUL; return;    
+        case 0:
+          fields.Operation = OPERATION::ADD; return;
+        case 32:
+          fields.Operation = OPERATION::SUB; return;
+      } break;
+      
     case 1:
-      fields.Operation = OPERATION::SLL;
-      break;
+      
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::SLL; return;    
+        case 1:
+          fields.Operation = OPERATION::MULH; return;
+      } break;
+
     case 2:
-      fields.Operation = OPERATION::SLT;
-      break;
+      
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::SLT; return;    
+        case 1:
+          fields.Operation = OPERATION::MULSU; return;
+      } break;
+
     case 3:
-      fields.Operation = OPERATION::SLTU;
-      break;
+      
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::SLTU; return;    
+        case 1:
+          fields.Operation = OPERATION::MULU; return;
+      } break;
+
     case 4:
-      fields.Operation = OPERATION::XOR;
-      break;
+      
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::XOR; return;    
+        case 1:
+          fields.Operation = OPERATION::DIV; return;
+      } break;
+
     case 5:
-      fields.Operation = (fields.funct7 == 0) ? OPERATION::SRL : OPERATION::SRA; 
-      break;
+
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::SRL; return;    
+        case 1:
+          fields.Operation = OPERATION::DIVU; return;
+        case 32:
+          fields.Operation = OPERATION::SRA; return;
+      } break;
+
     case 6:
-      fields.Operation = OPERATION::OR;
-      break;
+      
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::OR; return;    
+        case 1:
+          fields.Operation = OPERATION::REM; return;
+      } break;
+
     case 7:
-      fields.Operation = OPERATION::AND;
-      break;
+        
+      switch (fields.funct7) 
+      {
+        case 0:
+          fields.Operation = OPERATION::AND; return;    
+        case 1:
+          fields.Operation = OPERATION::REMU; return;
+      } break;
+      
   }
+  std::cerr << "Unable to find operation" << std::endl;
 }
 
 void decode_I_type(DecodedInstruction& fields) 
