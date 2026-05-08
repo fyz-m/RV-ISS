@@ -8,7 +8,8 @@ enum class OPERATION {
 
   UNKNOWN,
   // R-type
-  ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND,
+  ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND, 
+  MUL, MULH, MULSU, MULU, DIV, DIVU, REM, REMU, 
   // I-type
   LB, LH, LW, LBU, LHU, ADDI, SLLI, SLTI, SLTIU, XORI, SRLI, SRAI, ORI, ANDI, JALR,
   // S-type
