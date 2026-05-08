@@ -32,7 +32,20 @@ INSTANTIATE_TEST_SUITE_P(R_TYPE, RtypeTest,
 
     ::testing::Values(
       Rtype_Decode_Case {0x003100b3, 1, 2, 3, OPERATION::ADD, "add_basic"},  // add x1, x2, x3
-      Rtype_Decode_Case {0x403100b3, 1, 2, 3 , OPERATION::SUB, "sub_basic"} // sub x1, x2, x3
+      Rtype_Decode_Case {0x403100b3, 1, 2, 3 , OPERATION::SUB, "sub_basic"}, // sub x1, x2, x3
+
+      Rtype_Decode_Case {0x02000033, 0, 0, 0, OPERATION::MUL, "MUL_basic"},  // mul x0, x0, x0
+      Rtype_Decode_Case {0x02001033, 0, 0, 0 , OPERATION::MULH, "MULH_basic"}, // mulh x0, x0, x0
+
+      Rtype_Decode_Case {0x02002033, 0, 0, 0, OPERATION::MULHSU, "MULHSU_basic"},  // mulhsu x0, x0, x0
+      Rtype_Decode_Case {0x02003033, 0, 0, 0 , OPERATION::MULHU, "MULHU_basic"}, // mulhu x0, x0, x0
+
+      Rtype_Decode_Case {0x02004033, 0, 0, 0, OPERATION::DIV, "DIV_basic"},  // div x0, x0, x0
+      Rtype_Decode_Case {0x02005033, 0, 0, 0 , OPERATION::DIVU, "DIVU_basic"}, // divu x0, x0, x0
+
+      Rtype_Decode_Case {0x02006033, 0, 0, 0, OPERATION::REM, "REM_basic"},  // rem x0, x0, x0
+      Rtype_Decode_Case {0x02007033, 0, 0, 0 , OPERATION::REMU, "REMU_basic"} // remu x0, x0, x0
+
     ),
 
     [](const ::testing::TestParamInfo<Rtype_Decode_Case>& info) {
