@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <ostream>
+#include <stdexcept>
 
 // std::bitset to limit the address to 5-bits can limit the index so it is never out of bounds
 // Could increase perfomance as it makes validate_address() redundant  
@@ -51,9 +52,6 @@
     // Write a byte at address
 
     // If address is greater than current length, resize vector
-    // TODO: 
-    // For Write() calls to 32/16-bit data, we can resize the vector once in the beginning
-    // instead of for every byte - would increase performance but resizing the vector should be infrequent anyway
     if (address >= std::size(m_memory)) 
         m_memory.resize(address + 1);
     
@@ -83,6 +81,9 @@
 
   uint8_t Memory::Read_Byte(std::size_t address) const 
   { 
+    if (address >= std::size(m_memory))
+        throw std::runtime_error("Out of bounds read");
+
     return m_memory[address]; 
   }
 
@@ -118,13 +119,18 @@
     uint8_t byte[4];
     while (input_file.read(reinterpret_cast<char*>(&inst), sizeof(uint32_t))) 
     {
+      // Read one instruction at a time (4 bytes)
+      // Because ifstream reads from left to right and RISC-V is little endian,
+      // the instruction bytes needs to be put in reverse order
       for (int i = 0; i < 4; i++)
       {
+        // Store each byte seperately 
         byte[i] = static_cast<uint8_t>(inst >> (8 * i)); 
       }
 
       for (int i = 3; i >= 0; i--) 
       {
+        // Store in m_memory vector in reverse order 
         m_memory.push_back(byte[i]);
       }
     }
