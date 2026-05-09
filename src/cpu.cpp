@@ -2,6 +2,7 @@
 #include "headers/memory.hpp"
 #include "headers/decode.hpp"
 #include <cstdint>
+#include <iostream>
 #include <memory>
 
 // TODO:
@@ -18,13 +19,27 @@
       Data_Memory(Data_Memory_ptr)
     {}
 
+  void CPU::run_till_ebreak()
+  {
+    while(cycle_count < 100)
+    {
+     if (program_counter == static_cast<uint32_t>(OPERATION::EBREAK))
+          return;
+
+      Fetch();  
+      Decode();
+      Execute();
+      std::cout << "cycle: " << cycle_count << std::endl;
+      cycle_count++;
+    }
+  }
 
   void CPU::Step()
   {
     Fetch();
     Decode();
     Execute();
-
+    cycle_count++;
   }
 
   void CPU::Fetch()
