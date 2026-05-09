@@ -1,4 +1,6 @@
 #include "headers/cpu.hpp"
+#include <cmath>
+#include <cstdint>
 
   void CPU::execute_R_type()
   {
@@ -77,6 +79,74 @@
         break;
       }
 
+      case OPERATION::MUL:
+        result = (static_cast<int64_t>(rs1) * static_cast<int64_t>(rs2));
+        break;
+      
+      case OPERATION::MULH:
+        // Store bits[63:32] of the result
+        result = (static_cast<int64_t>(rs1) * static_cast<int64_t>(rs2)) >> 32;
+        break;
+      
+      case OPERATION::MULHU: 
+      {
+        auto rs1_u = static_cast<uint32_t>(rs1);
+        auto rs2_u = static_cast<uint32_t>(rs2);
+        result = (static_cast<uint64_t>(rs1_u) * static_cast<uint64_t>(rs2_u)) >> 32; 
+        break;
+      }
+      
+      case OPERATION::MULHSU:
+      {
+        auto rs2_u = static_cast<uint32_t>(rs2);
+        result = (static_cast<int64_t>(rs1) * static_cast<uint64_t>(rs2_u)) >> 32;
+        break;
+      }
+
+      case OPERATION::DIV:
+      {  
+        if (rs2 == 0) { 
+          result = -1; break;
+        }
+        // Division overflow
+        else if ((rs1 == -2147483648) && (rs2 == -1)) {
+          result = rs1; break;
+        } 
+
+        result = rs1 / rs2; break;
+      }  
+
+      case OPERATION::DIVU:
+      {
+        if (rs2 == 0) {
+          result = -1; break;
+        }
+        result = static_cast<uint32_t>(rs1) / static_cast<uint32_t>(rs2);
+        break;
+      }
+
+      case OPERATION::REM:
+      {
+        if (rs2 == 0) {
+          result = rs1; break;
+        }
+        // Division overflow
+        else if ((rs1 == -2147483648) && (rs2 == -1)) {
+          result = 0; break;
+        } 
+        
+        result = rs1 % rs2; break;
+      }
+
+      case OPERATION::REMU:
+      {
+        if (rs2 == 0) {
+          result = rs1; break;
+        }
+        result = static_cast<uint32_t>(rs1) % static_cast<uint32_t>(rs2);
+        break;
+      }
+      
       default: 
         break; 
     }
