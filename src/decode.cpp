@@ -2,6 +2,8 @@
 #include "headers/cpu.hpp"
 #include <cstdint>
 #include <iostream>
+#include <stdexcept>
+#include <system_error>
 
 
 void decode(DecodedInstruction &input_instruction) 
@@ -43,7 +45,8 @@ void decode(DecodedInstruction &input_instruction)
     break;
 
   default:
-    std::cerr << "Unable to resolve instruction type" << std::endl;
+   std::cerr << "   "<< input_instruction.raw_inst <<std::endl;
+   throw std::runtime_error("Unable to resolve instruction type ^");
   }
 }
 
@@ -151,6 +154,9 @@ void decode_I_type(DecodedInstruction& fields)
   switch (fields.funct3) 
   {
     case 0:
+      if (fields.opcode == 103) {
+        fields.Operation = OPERATION::JALR; break;
+      }
       fields.Operation = (fields.opcode == 19) ? OPERATION::ADDI : OPERATION::LB; 
       break;   
     case 1:
@@ -185,7 +191,7 @@ void decode_I_type(DecodedInstruction& fields)
       fields.Operation = OPERATION::ANDI;
       break;
     default:
-        fields.Operation = (fields.opcode == 103) ? OPERATION::JALR : OPERATION::UNKNOWN;
+        fields.Operation = OPERATION::UNKNOWN;
       
   }
 
@@ -400,6 +406,7 @@ void set_type(DecodedInstruction& fields)
     break;
 
   default:
-    std::cerr << "Unable to resolve instruction type" << std::endl;
+    std::cerr << "          " <<  fields.opcode << std::endl;
+    std::runtime_error("Unable to resolve instruction type with the opcode ^");
   }
 }
