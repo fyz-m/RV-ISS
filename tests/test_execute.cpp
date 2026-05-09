@@ -534,3 +534,58 @@ TEST(Jtype_execute_test, test_JAL_negative_max)
     EXPECT_EQ(cpu.readPC(), static_cast<uint32_t>(4293918714));
 
 }
+
+
+TEST(Itype_execute_test, test_JALR)
+{
+    
+    CPU_test cpu;
+    cpu.instruction_fields.type = TYPE::I_TYPE;
+    cpu.instruction_fields.Operation = OPERATION::JALR;
+    cpu.instruction_fields.rd = 1;
+    cpu.instruction_fields.rs1 = 2;
+    cpu.instruction_fields.imm = 100;
+
+    cpu.writeReg(2, 100);
+    cpu.writePC(400);
+    cpu.Execute();
+
+    EXPECT_EQ(cpu.readReg(1), 404);
+    EXPECT_EQ(cpu.readPC(), 600);
+}
+
+TEST(Itype_execute_test, test_JALR_negative)
+{
+    
+    CPU_test cpu;
+    cpu.instruction_fields.type = TYPE::I_TYPE;
+    cpu.instruction_fields.Operation = OPERATION::JALR;
+    cpu.instruction_fields.rd = 1;
+    cpu.instruction_fields.rs1 = 2;
+    cpu.instruction_fields.imm = -100;
+
+    cpu.writeReg(2, -100);
+    cpu.writePC(400);
+    cpu.Execute();
+
+    EXPECT_EQ(cpu.readReg(1), 404);
+    EXPECT_EQ(cpu.readPC(), 200);
+}
+
+TEST(Itype_execute_test, test_JALR_0)
+{
+    
+    CPU_test cpu;
+    cpu.instruction_fields.type = TYPE::I_TYPE;
+    cpu.instruction_fields.Operation = OPERATION::JALR;
+    cpu.instruction_fields.rd = 1;
+    cpu.instruction_fields.rs1 = 2;
+    cpu.instruction_fields.imm = -100;
+
+    cpu.writeReg(2, 100);
+    cpu.writePC(400);
+    cpu.Execute();
+
+    EXPECT_EQ(cpu.readReg(1), 404);
+    EXPECT_EQ(cpu.readPC(), 400);
+}
