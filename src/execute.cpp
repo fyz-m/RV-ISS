@@ -256,8 +256,11 @@
       case OPERATION::JALR:
       {
         result = readPC() + 4;
-        writePC(rs1 + imm);
-        break;
+        writeReg(rd, result);
+
+        auto jump_target_address = static_cast<int32_t>(readPC()) + rs1 + imm;
+        writePC(jump_target_address);    
+        return;
       }
 
       default: 
@@ -275,7 +278,7 @@
   void CPU::execute_S_type()
   {
     // Memory address to store value in rs2 = value in rs1 + imm
-    int address = readReg(instruction_fields.rs1) + instruction_fields.imm;
+    uint32_t address = readReg(instruction_fields.rs1) + instruction_fields.imm;
     uint32_t rs2 = readReg(instruction_fields.rs2);
 
     switch (instruction_fields.Operation) 
