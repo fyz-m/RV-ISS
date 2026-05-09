@@ -388,6 +388,7 @@
       default:
         break;
     }
+    incrementPC();
   }
 
   void CPU::execute_J_type()
