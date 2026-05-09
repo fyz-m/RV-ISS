@@ -258,7 +258,7 @@
         result = readPC() + 4;
         writeReg(rd, result);
 
-        auto jump_target_address = static_cast<int32_t>(readPC()) + rs1 + imm;
+        auto jump_target_address = rs1 + imm;
         writePC(jump_target_address);    
         return;
       }
