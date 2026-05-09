@@ -19,7 +19,9 @@ enum class OPERATION {
   // U-type
   LUI, AUIPC,
   // J-type
-  JAL
+  JAL,
+
+  EBREAK = 0x00100073 
 };
 
 enum class TYPE { UNKNOWN, R_TYPE, I_TYPE, S_TYPE, B_TYPE, U_TYPE, J_TYPE };
@@ -36,7 +38,6 @@ typedef struct  DecodedInstruction {
   OPERATION Operation = OPERATION::UNKNOWN;
 
 } DecodedInstruction;
-
 
 
 class CPU
@@ -61,6 +62,8 @@ class CPU
     // Memory for data
     std::shared_ptr <Memory> Data_Memory;
 
+    int cycle_count {};
+
   public:
 
     CPU(int width = 32, 
@@ -68,7 +71,10 @@ class CPU
         std::shared_ptr<Memory> Data_Memory_ptr = nullptr);
     
     friend class CPU_test;
-    // Complete one instruction ( Fetch/decode/execute )
+
+    void run_till_ebreak();
+
+    // Complete one instruction (Fetch/Decode/Execute)
     void Step();
 
     // Returns the pointer of the memory object CPU is fetching instructions from
