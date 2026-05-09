@@ -2,7 +2,6 @@
 #include "headers/memory.hpp"
 #include "headers/decode.hpp"
 #include <cstdint>
-#include <iostream>
 #include <memory>
 
 // TODO:
@@ -19,9 +18,9 @@
       Data_Memory(Data_Memory_ptr)
     {}
 
-  void CPU::run_till_ebreak()
+  void CPU::runtoEbreak()
   {
-    while(cycle_count < 100)
+    while(cycle_count < 5000)
     {
      if (program_counter == static_cast<uint32_t>(OPERATION::EBREAK))
           return;
@@ -29,7 +28,6 @@
       Fetch();  
       Decode();
       Execute();
-      std::cout << "cycle: " << cycle_count << std::endl;
       cycle_count++;
     }
   }
@@ -111,6 +109,23 @@
   { 
     return register_file.Read(address); 
   }
+
+  int CPU::cycles()
+  {
+    return cycle_count;
+  }
+  
+  std::shared_ptr<Memory> CPU::getInstructionMemory() const
+  {
+    return Instruction_Memory;
+  } 
+  
+  std::shared_ptr<Memory> CPU::getDataMemory() const
+  {
+    return Data_Memory;
+  }
+
+
 
 
 
