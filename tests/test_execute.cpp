@@ -551,7 +551,7 @@ TEST(Itype_execute_test, test_JALR)
     cpu.Execute();
 
     EXPECT_EQ(cpu.readReg(1), 404);
-    EXPECT_EQ(cpu.readPC(), 600);
+    EXPECT_EQ(cpu.readPC(), 200);
 }
 
 TEST(Itype_execute_test, test_JALR_negative)
@@ -564,12 +564,12 @@ TEST(Itype_execute_test, test_JALR_negative)
     cpu.instruction_fields.rs1 = 2;
     cpu.instruction_fields.imm = -100;
 
-    cpu.writeReg(2, -100);
+    cpu.writeReg(2, 1000);
     cpu.writePC(400);
     cpu.Execute();
 
     EXPECT_EQ(cpu.readReg(1), 404);
-    EXPECT_EQ(cpu.readPC(), 200);
+    EXPECT_EQ(cpu.readPC(), 900);
 }
 
 TEST(Itype_execute_test, test_JALR_0)
@@ -587,5 +587,5 @@ TEST(Itype_execute_test, test_JALR_0)
     cpu.Execute();
 
     EXPECT_EQ(cpu.readReg(1), 404);
-    EXPECT_EQ(cpu.readPC(), 400);
+    EXPECT_EQ(cpu.readPC(), 0);
 }
