@@ -18,13 +18,13 @@ class RegisterFile {
 
     RegisterFile(int width = 32);
 
-    void Write(int address, uint32_t data);
+    void Write(const int &address, const uint32_t &data);
 
-    uint32_t Read(int address) const;
+    uint32_t Read(const int &address) const;
   
   private:
 
-    void validate_address(int& address) const;
+    void validate_address(const int& address) const;
 
 };
 
@@ -38,20 +38,21 @@ public:
 
   Memory(int size = 2048);
 
-  void Write(uint8_t data, std::size_t address);
+  void Write(const uint8_t &data, const std::size_t &address);
 
-  void Write(uint32_t data, std::size_t address);
+  void Write(const uint32_t &data, const std::size_t &address);
 
-  void Write(uint16_t data, std::size_t address);
+  void Write(const uint16_t &data, const std::size_t &address);
 
   // Returns the byte at the given address 
-  uint8_t Read_Byte(std::size_t address) const;
+  uint8_t Read_Byte(const std::size_t &address) const;
 
   // Returns the word (8 bytes) at the given address 
-  uint32_t Read_Word(std::size_t address) const;
+  // A word is 32-bit in RISC-V, even in RV64  
+  uint32_t Read_Word(const std::size_t &address) const;
 
   // Returns the half word (4 bytes) at the given address 
-  uint16_t Read_halfWord(std::size_t address) const;
+  uint16_t Read_halfWord(const std::size_t &address) const;
 
   // Load a program into memory
   bool Load(const char *filepath);
