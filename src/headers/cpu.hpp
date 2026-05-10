@@ -50,10 +50,10 @@ class CPU
     // Contains instruction fields (opcode, rs1, rd etc.)
     DecodedInstruction instruction_fields;
 
-    // Program Counter: Contains memory address of instruction to execute
+    // Contains memory address of instruction to execute
     uint32_t program_counter;
 
-    // Register file: stores operands to perform operations on 
+    // Stores operands to perform operations on 
     RegisterFile register_file;
 
     // Memory containing instructions 
@@ -72,7 +72,7 @@ class CPU
     
     friend class CPU_test;
 
-    void run_till_ebreak();
+    void runtoEbreak();
 
     // Complete one instruction (Fetch/Decode/Execute)
     void Step();
@@ -83,12 +83,9 @@ class CPU
     // Returns the pointer of the memory object CPU is using for data reads/writes
     std::shared_ptr<Memory> getDataMemory() const; 
 
-    // Returns the value in the register[address]
-    uint32_t readReg(int address) const;
-
-    // Returns the current value of the program counter
-    uint32_t readPC() const;
-    
+    // Returns number of cycles (1 cycle = 1 F/D/E loop)
+    int cycles();
+ 
     // Fetch instruction at address[PC] and write it to the instruction register
     void Fetch();
 
@@ -97,17 +94,25 @@ class CPU
 
     // Execute the operation
     void Execute();
+    
+    // Returns the current value of the program counter
+    uint32_t readPC() const;
 
     // Write a value to the program counter
-    void writePC(uint32_t data);
+    void writePC(const uint32_t &data);
     
     // Increment program counter to the next instruction
     void incrementPC();
     
-    // Write to register[address]
-    void writeReg(int address, uint32_t data);
+    // Returns the value in the register[address]
+    uint32_t readReg(const int &address) const;
+
+    
   
   private:
+
+    // Write to register[address]
+    void writeReg(const int &address, const uint32_t &data);
 
     void execute_R_type();
 
@@ -125,10 +130,11 @@ class CPU
 
 
 // Expose instruction fields for testing
-class CPU_test : public CPU{
+class CPU_test : public CPU {
 
   public:
     using CPU::CPU;
     using CPU::instruction_fields;
+    using CPU::writeReg;
 };
 

@@ -84,7 +84,7 @@
     }
   }
   
-  void CPU::writePC(uint32_t data) 
+  void CPU::writePC(const uint32_t &data) 
   {
     // Write to the PC for branch and jump instructions
     program_counter = data;
@@ -100,12 +100,12 @@
     return program_counter; 
   }
 
-  void CPU::writeReg(int address, uint32_t data) 
+  void CPU::writeReg(const int &address, const uint32_t &data) 
   {
     register_file.Write(address, data);
   }
 
-  uint32_t CPU::readReg(int address) const 
+  uint32_t CPU::readReg(const int &address) const 
   { 
     return register_file.Read(address); 
   }
