@@ -248,6 +248,7 @@ void decode_B_type(DecodedInstruction& fields)
       break;
     case 7:
       fields.Operation = OPERATION::BGEU; 
+      break;
     default:
       fields.Operation = OPERATION::UNKNOWN;
   }
