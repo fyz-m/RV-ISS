@@ -108,6 +108,21 @@ TEST_F(MemoryTest, resizes_on_addresses_greater_than_current_length)
   ASSERT_EQ(memory->Read_Byte(4000), 0x00);
 }
 
+TEST_F(MemoryTest, throws_exception_on_invalid_reads)
+{
+  // size = 0
+  ASSERT_ANY_THROW(memory->Read_Byte(0));
+  ASSERT_ANY_THROW(memory->Read_Byte(1));
+  
+  // size = 2
+  memory->Write(static_cast<uint8_t>(0xA), 1);
+  ASSERT_NO_FATAL_FAILURE(memory->Read_Byte(1));
+  ASSERT_NO_FATAL_FAILURE(memory->Read_Byte(0));
+  ASSERT_NO_FATAL_FAILURE(memory->Read_halfWord(0));
+  ASSERT_ANY_THROW(memory->Read_Byte(2));
+  ASSERT_ANY_THROW(memory->Read_Word(0));
+}
+
 TEST_F(MemoryTest, max_resize)
 {
   // Memory object will take up 4 GB of heap storage
