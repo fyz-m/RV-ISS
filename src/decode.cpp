@@ -141,9 +141,11 @@ void decode_R_type(DecodedInstruction& fields)
         case 1:
           fields.Operation = OPERATION::REMU; return;
       } break;
-
+    
+    default:
+      fields.Operation = OPERATION::UNKNOWN;
   }
-  std::cerr << "Unable to find operation" << std::endl;
+
 }
 
 void decode_I_type(DecodedInstruction& fields) 
@@ -217,6 +219,8 @@ void decode_S_type(DecodedInstruction& fields)
     case 2:
       fields.Operation = OPERATION::SW;
       break;
+    default:
+      fields.Operation = OPERATION::UNKNOWN;
   }
 }
 
@@ -244,6 +248,8 @@ void decode_B_type(DecodedInstruction& fields)
       break;
     case 7:
       fields.Operation = OPERATION::BGEU; 
+    default:
+      fields.Operation = OPERATION::UNKNOWN;
   }
 }
 
@@ -406,7 +412,6 @@ void set_type(DecodedInstruction& fields)
     break;
 
   default:
-    std::cerr << "          " <<  fields.opcode << std::endl;
-    std::runtime_error("Unable to resolve instruction type with the opcode ^");
+    fields.type = TYPE::UNKNOWN;
   }
 }
