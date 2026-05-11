@@ -4,9 +4,6 @@
 #include <cstdint>
 #include <memory>
 
-// TODO:
-// Change instruction_fields.raw_inst to be a pointer to the instruction register
-// To prevent unneccesary copying each time instruction is fetched
 
   CPU::CPU(int width, 
            std::shared_ptr<Memory> Instruction_Memory_ptr, 
@@ -22,10 +19,9 @@
   {
     while(cycle_count < 5000)
     {
-     if (program_counter == static_cast<uint32_t>(OPERATION::EBREAK))
-          return;
-
       Fetch();  
+      if (instruction_register == static_cast<uint32_t>(OPERATION::EBREAK))
+          return;
       Decode();
       Execute();
       cycle_count++;
@@ -90,12 +86,12 @@
     program_counter = data;
   }
 
-  void CPU::incrementPC(void) 
+  void CPU::incrementPC() 
   {
     program_counter += 4; 
   }
 
-  uint32_t CPU::readPC(void) const
+  uint32_t CPU::readPC() const
   { 
     return program_counter; 
   }
