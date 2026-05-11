@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <memory>
 
+constexpr uint32_t EBREAK_ENCODING = 0x00100073;
 
 enum class OPERATION {
 
@@ -21,7 +22,6 @@ enum class OPERATION {
   // J-type
   JAL,
 
-  EBREAK = 0x00100073 
 };
 
 enum class TYPE { UNKNOWN, R_TYPE, I_TYPE, S_TYPE, B_TYPE, U_TYPE, J_TYPE };

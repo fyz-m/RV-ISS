@@ -5,7 +5,6 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <format>
 
   CPU::CPU(int width, 
            std::shared_ptr<Memory> Instruction_Memory_ptr, 
@@ -22,7 +21,7 @@
     while(cycle_count < 5000)
     {
       Fetch();  
-      if (instruction_register == static_cast<uint32_t>(OPERATION::EBREAK))
+      if (instruction_register == EBREAK_ENCODING)
           return;
       Decode();
       Execute();
