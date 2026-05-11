@@ -2,7 +2,9 @@
 #include "headers/memory.hpp"
 #include "headers/decode.hpp"
 #include <cstdint>
+#include <iostream>
 #include <memory>
+#include <stdexcept>
 
 
   CPU::CPU(int width, 
@@ -45,6 +47,17 @@
   void CPU::Decode()
   {
     decode(instruction_fields);
+
+    if (instruction_fields.type == TYPE::UNKNOWN) {
+      std::cerr << "      " << instruction_fields.raw_inst << std::endl;
+      throw std::runtime_error("Unable to decode type ^^");
+    }
+
+    if (instruction_fields.Operation == OPERATION::UNKNOWN) {
+      std::cerr << "      " << instruction_fields.raw_inst << std::endl;
+      throw std::runtime_error("Unable to decode operation ^^");
+    }
+    
   }
 
   void CPU::Execute()
