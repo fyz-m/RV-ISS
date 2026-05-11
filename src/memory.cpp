@@ -38,6 +38,7 @@
 
 
 
+  
   Memory::Memory(int size)     
   {
     // Pre-allocate memory of amount 'size' to the array
@@ -122,26 +123,11 @@
       return false;
     }
 
-    uint32_t inst {};
-    uint8_t byte[4];
-    while (input_file.read(reinterpret_cast<char*>(&inst), sizeof(uint32_t))) 
+    uint8_t inst_byte {};
+    while (input_file.read(reinterpret_cast<char*>(&inst_byte), sizeof(uint8_t))) 
     {
-      // Read one instruction at a time (4 bytes)
-      // Because ifstream reads from left to right and RISC-V is little endian,
-      // the instruction bytes needs to be put in reverse order
-      for (int i = 0; i < 4; i++)
-      {
-        // Store each byte seperately 
-        byte[i] = static_cast<uint8_t>(inst >> (8 * i)); 
-      }
-
-      for (int i = 3; i >= 0; i--) 
-      {
-        // Store in m_memory vector in reverse order 
-        m_memory.push_back(byte[i]);
-      }
+      m_memory.push_back(inst_byte);
     }
-
     input_file.close();
     return true;
   }
