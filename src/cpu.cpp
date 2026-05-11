@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
-
+#include <format>
 
   CPU::CPU(int width, 
            std::shared_ptr<Memory> Instruction_Memory_ptr, 
@@ -134,7 +134,18 @@
     return Data_Memory;
   }
 
+  void CPU::printState()
+  {
+    std::cout << '\n';
+    std::cout << "---------------------------- ARCHITECTURAL STATE ----------------------------" << std::endl;
+    std::cout << '\n';
+    std::cout << "Program Counter: " << CPU::program_counter <<std::endl;
+    // Instruction register is not part of Architectural state but is useful 
+    std::cout << "Instruction Register : " << CPU::instruction_register <<std::endl;
+    std::cout << '\n';
 
-
-
-
+    for (int i = 0; i < 32; i++)
+    {
+      std::cout << "Register " << i << " : " << CPU::readReg(i) << std::endl;
+    }
+  }

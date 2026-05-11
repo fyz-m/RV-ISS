@@ -28,9 +28,6 @@ enum class TYPE { UNKNOWN, R_TYPE, I_TYPE, S_TYPE, B_TYPE, U_TYPE, J_TYPE };
 
 typedef struct  DecodedInstruction {
 
-  // uint32_t* raw_inst = nullptr;  
-  // -- cpu.cpp needs to be updated to use raw_inst as a pointer to instruction register
-  // Current implementation is creating a copy every Fetch() call 
   uint32_t raw_inst {};
   uint8_t opcode{}, funct3{}, funct7{}, rs1{}, rs2{}, rd{};
   int32_t imm{};
@@ -106,7 +103,9 @@ class CPU
     
     // Returns the value in the register[address]
     uint32_t readReg(const int &address) const;
-
+    
+    // Prints the architectural state of the CPU (registers + pc)
+    void printState();
     
   
   private:
