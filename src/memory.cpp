@@ -82,7 +82,7 @@
 
   uint8_t Memory::Read_Byte(const std::size_t &address) const 
   { 
-    if (address > std::size(m_memory))
+    if (address >= std::size(m_memory))
         throw std::runtime_error("Out of bounds read");
 
     return m_memory[address]; 
