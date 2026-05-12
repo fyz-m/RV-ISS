@@ -12,17 +12,19 @@ add_library(iss_core
     src/decode.cpp
     src/execute.cpp
 )
-target_include_directories(iss_core PUBLIC headers)
+target_include_directories(iss_core PUBLIC src/headers)
 target_compile_options(iss_core PRIVATE
-    -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -g3 -O0
+    -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined 
+    $<$<CONFIG:Debug>:  -g3 -O0>
+    $<$<CONFIG:Release>: -O2>
 )
 target_link_options(iss_core PRIVATE -fsanitize=address,undefined)
 
 # ── Simulator executable ──────────────────────────────────────────────────────
-add_executable(rv32i_sim src/main.cpp)
-target_link_libraries(rv32i_sim PRIVATE iss_core)
-target_compile_options(rv32i_sim PRIVATE -fsanitize=address,undefined)
-target_link_options(rv32i_sim PRIVATE -fsanitize=address,undefined)
+add_executable(rv32_sim src/main.cpp)
+target_link_libraries(rv32_sim PRIVATE iss_core)
+target_compile_options(rv32_sim PRIVATE -fsanitize=address,undefined)
+target_link_options(rv32_sim PRIVATE -fsanitize=address,undefined)
 
 
 
@@ -45,9 +47,9 @@ add_library(iss_core_test
     src/execute.cpp
 )
 
-target_include_directories(iss_core_test PUBLIC headers)
+target_include_directories(iss_core_test PUBLIC src/headers)
 target_compile_options(iss_core_test PRIVATE
-    -Wall -Wextra -Wpedantic -Werror  -g3 -O0
+    -Wall -Wextra -Wpedantic -Werror -g3 -O0
 )
 
 add_executable(iss_tests 
