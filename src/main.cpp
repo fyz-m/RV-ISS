@@ -10,15 +10,19 @@ constexpr int WIDTH = 32;
 
 int main(int argc, char* argv[]) {
 
-  if (argc != 3) {
-    std::cerr << "\tUsage: ./rv_iss binaryfile.bin p=true/false" << std::endl;
+  if (!(argc >=2 && argc <=3 )) {
+    std::cerr << "\tUsage: ./rv32_sim binaryfile.bin -p=true" << std::endl;
     return 1;
   }
   
   bool print_state {false};
-  std::string_view p{argv[2]};
-  if (p == "p=true")
-    print_state = true;
+ 
+  if (argv[2] != NULL) 
+  {
+    std::string_view p{argv[2]};
+    if (p == "-p=true")
+      print_state = true;
+  }
 
 
   auto Instruction_Memory = std::make_shared <Memory>();
