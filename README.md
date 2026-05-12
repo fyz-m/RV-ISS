@@ -1,8 +1,63 @@
 # RISC-V simulator
 
-A cycle-accurate RISC-V instruction set simulator currently supporting the RISC-V base integer instruction set (RV32I) and the M-extension (multiply/divide).
+A RISC-V instruction set simulator currently supporting the RISC-V base integer instruction set (RV32I) and the M-extension (multiply/divide).
 
 ---
+
+## What This Is
+ 
+The simulator executes RV32IM machine code binaries, modelling the fetch/decode/execute pipeline of a single-cycle 32-bit RISC-V core. It implements all RV32I base instructions and all 8 M-extension instructions, with correct handling of spec-defined corner cases such as division by zero, division overflow, and signed/unsigned remainder behaviour.
+ 
+The project is structured as a linkable `iss_core` library, which allows the same core to be used both as a runnable simulator and as a test target under Google Test.
+ 
+## Features
+- Full RV32I base ISA (R, I, S, B, U, J-type instructions)
+- M-extension: `MUL`, `MULH`, `MULHU`, `MULHSU`, `DIV`, `DIVU`, `REM`, `REMU`
+- Harvard memory model with separate instruction and data address spaces
+- Byte-addressable memory
+- EBREAK halt detection
+- `runtoEbreak()` execution mode and single-step `Step()` interface
+- Google Test suite with parameterised tests across all instruction types
+
+---
+
+## Architecture
+```
+          ┌─────────────────────────────────┐
+          │              CPU                │
+          │                                 │
+          │  ┌─────┐  ┌────────┐  ┌──────┐  │
+          │  │Fetch│→ │ Decode │→ │ Exec │  │
+          │  └──┬──┘  └───┬────┘  └──┬───┘  │
+          │     │         │          │      │
+          │  Instruction  │     R/W Data    │
+          │   Memory      │       Memory    │
+          └───────────────┴─────────────────┘
+```
+
+
+## Project Structure
+```
+rv32-iss/
+├── CMakeLists.txt
+├── README.md
+├── src/
+│   ├── main.cpp     # CLI entry point 
+│   ├── cpu.cpp      # CPU class    
+│   ├── decode.cpp   # Instruction decoding logic
+│   ├── execute.cpp  # Instruction execution logic
+│   ├── memory.cpp   # Byte-addressable memory and register file classes 
+│   └── headers/
+│       ├── cpu.hpp
+│       ├── decode.hpp
+│       └── memory.hpp
+└── tests/
+    ├── test_decode.cpp  # Unit tests for decoding logic
+    ├── test_execute.cpp # Unit tests for execution logic
+    ├── test_memory.cpp  # Unit tests for memory/register file
+    └── programs/
+        └── factorial_12.bin # RISC-V program that caclulates 12!  
+```
 
 ## Usage
 
@@ -62,7 +117,6 @@ To run the test suite:
 ```bash
 --gtest_filter=-MemoryTest.max_resize
 ```
----
 
 ## Build
  
@@ -72,5 +126,9 @@ To run the test suite:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
+## Future additions
+ - **Add `RVF` intsructions (single-precision floating-point)**  
+ - **Add Cache**
 
 
