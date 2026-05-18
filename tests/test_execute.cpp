@@ -100,8 +100,8 @@ INSTANTIATE_TEST_SUITE_P(R_TYPE, Rtype_Execute_Test,
     
       // rs1 = signed, rs2 = unsigned
       Rtype_Execute_Case{OPERATION::MULHSU, 100, -1, 0x63, "mulhsu_treats_rs2_as_unsigned"},
-      Rtype_Execute_Case{OPERATION::MULHSU, -1, -1, -1, "mulhsu_treats_rs1_as_signed"},
-      
+      Rtype_Execute_Case{OPERATION::MULHSU, -2147483648, 50, static_cast<int32_t>(0xFFFFFFE7), "mulhsu_treats_rs1_as_signed"},
+      Rtype_Execute_Case{OPERATION::MULHSU, -2147483648, 100000, static_cast<int32_t>(0xFFFF3CB0), "mulhsu_treats_rs1_as_signed_2"},
 
       Rtype_Execute_Case{OPERATION::DIV, 10, 5, 2, "div_basic"},
       Rtype_Execute_Case{OPERATION::DIV, 10, -5, -2, "div_negative"},
