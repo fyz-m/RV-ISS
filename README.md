@@ -18,12 +18,29 @@ The simulator executes RV32IM machine code binaries, modelling the fetch/decode/
 ---
 
 ## Architecture
-<img width="868" height="552" alt="image" src="https://github.com/user-attachments/assets/cb7b76cb-be95-461d-b7d0-62b29c8e228c" />
+<div align="center">
+<img width="800" height="500" alt="image" src="https://github.com/user-attachments/assets/cb7b76cb-be95-461d-b7d0-62b29c8e228c" />
+</div>
 
 ### Fetch
 A CPU cycle starts by fetching the instruction. The `Fetch()` function reads the instruction from the `instruction memory` and writes it to the `instruction register`. The memory address of the instruction to fetch is held in the `program counter`.
 ### Decode
-Next the 32-bit instruction is decoded by `Decode()` in order to extract the instruction fields. Firstly, the `opcode` field is found which determines the instruction type (e.g `R-type`) which tells us where the rest of the instruction fields are located in the 32-bits.  All RISC-V instructions contain the opcode in bits[6:0] of the instruction.     
+Next, the 32-bit instruction is decoded by `Decode()` in order to extract the instruction fields. Firstly, the `opcode` field is found which determines the instruction type (e.g `R-type`) that tells us where the rest of the instruction fields are located in the 32-bit instruction. All RISC-V instructions contain the opcode in bits[6:0] of the instruction. 
+<div align="center">
+<img width="800" height="450" alt="image" src="https://github.com/user-attachments/assets/0baf6711-9209-4ecd-a540-f932f1531219" />
+</div>
+<div align="center">
+  Source: <a href="https://pages.hmc.edu/harris/ddca/ddcarv.html">Digital Design and Computer Architecture RISC-V Edition</a>
+</div>  
+<br>
+
+After determining the instruction type, the rest of the fields (e.g `rs1`, `rs2`, `rd`) are extracted and stored in a `DecodedInstruction` struct defined in `cpu.hpp`. The combination of `opcode`, `funct3` and `funct7` fields determines the operation to perform such as `add`.
+
+### Execute
+The operation is performed on the operands defined in the instruction. In the case of `add`, the first operand is in the first source register `rs1` and the second is in `rs2`. The 32-bit operands are read from the register file and added together, the result gets written to register `rd` and the program counter is incremented to the next instruction. It can be thought of as an instruction pointer because it contains the memory address of the instruction to execute. 
+
+Some instructions read/write to the data memory (RAM) or change the value of the program counter conditionally such as branch instructions which are `B-type` or unconditionally like `J-type` instructions.       
+
 
 ## Project Structure
 ```
