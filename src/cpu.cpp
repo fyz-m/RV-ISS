@@ -16,9 +16,9 @@
       Data_Memory(Data_Memory_ptr)
     {}
 
-  void CPU::runtoEbreak()
+  void CPU::runtoEbreak(const int MAX_CYCLES)
   {
-    while(cycle_count < 5000)
+    while(cycle_count < MAX_CYCLES)
     {
       Fetch();  
       if (instruction_register == EBREAK_ENCODING)

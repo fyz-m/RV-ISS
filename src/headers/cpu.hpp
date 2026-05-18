@@ -69,7 +69,7 @@ class CPU
     
     friend class CPU_test;
 
-    void runtoEbreak();
+    void runtoEbreak(const int MAX_CYCLES = 5000);
 
     // Complete one instruction (Fetch/Decode/Execute)
     void Step();
